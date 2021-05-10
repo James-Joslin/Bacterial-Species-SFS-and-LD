@@ -76,8 +76,8 @@ with tqdm(total=100) as pbar:
         for l in range(len(cog)):
             sleep(0.0001)
             pbar.update(100/(len(cog)*len(Folder)))
-            SFSn = [0]*int(len(Strains)/2)  #Your annotation - you have to be very careful in constructing lists in this way; sometimes 
-            SFSs = [0]*int(len(Strains)/2)  #inadvertently construct references to lists and niot the lists themselves
+            SFSn = [0]*int(len(Strains)/2) 
+            SFSs = [0]*int(len(Strains)/2)  
             sequencesCombined = []
             Complex_Codons = 0
             NumGaps = 0
@@ -94,30 +94,28 @@ with tqdm(total=100) as pbar:
                     sequences = infile.read()
                     sequences_split = sequences.split()
                     sequencesCombined.append(sequences_split[1])   
-                                    #I now realise that instead of doing this manually I could've multiplied the length of the zeros, by half the length of the strain list
-                                    #And if it was a decimal, then I know that this decimal would be ".5" then perhaps I could've written a couple of lines to round this down to the closest
-                                    #whole number, not sure how to do this though, but I reckon it would be doable.
+                                    
             if isdir == True:  
                 NumberHyphens = sequences.count('-')
                 #print(NumberHyphens/len(sequencesCombined[0]))
-                if (NumberHyphens/len(sequencesCombined[0])) >= 0.1: #Check if number of Gaps makes up less than 10%
-                    gene = 'fail' #If the gene fails the loop continues but nothing gets written and so the gene is ignored in the final output
+                if (NumberHyphens/len(sequencesCombined[0])) >= 0.1:
+                    gene = 'fail' 
                 else:
-                    for i in range(0, len(sequencesCombined[0]), 3): #repeat process for the length of the sequence moving up in intervals of 3
-                        codons = {} #Build an empty dictionary ready for populating
+                    for i in range(0, len(sequencesCombined[0]), 3): 
+                        codons = {} 
                         NumGaps = 0
-                        for j in range(len(sequencesCombined)): #Repeat loop for the number of sequences in my list, in this case 10
+                        for j in range(len(sequencesCombined)): 
                             if gene == 'pass':
-                                codon = sequencesCombined[j][i:i+3] #slice every 3 elements of the sequence to form the codon
-                                if (codon.count('-') == 1) or (codon.count('-') == 2): #check that slice doesn't have any gaps that are't a factor of 3
-                                    gene = 'fail' #if the current slice has gaps that aren't a factor of 3 then fail the entire gene
+                                codon = sequencesCombined[j][i:i+3] 
+                                if (codon.count('-') == 1) or (codon.count('-') == 2): 
+                                    gene = 'fail'
                                 else:
-                                    if '---' in codon: #for counting the number of gaps in the passed sequences
+                                    if '---' in codon:
                                         NumGaps += 1
-                                    else:   #what codons do we have?             
+                                    else:              
                                         if codon not in codons:
-                                            codons[codon] = 1 #if this codon isn't present in the dictionary, add it to the dictionary, if it is present
-                                        else: #add one onto the total
+                                            codons[codon] = 1 
+                                        else: 
                                             codons[codon] += 1
                             else:
                                 pass
